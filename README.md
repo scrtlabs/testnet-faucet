@@ -72,3 +72,11 @@ Lastly, serve the `./frontend/dist` directory with the web server of your choice
 ### Development
 
 Run `yarn serve` in the `frontend` directory to serve the frontend with hot reload.
+
+## Service
+
+```bash
+vim .env
+cp .env .env.local
+sudo systemctl start faucet-ws.service
+```
