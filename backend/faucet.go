@@ -161,6 +161,7 @@ func getCoinsHandler(w http.ResponseWriter, request *http.Request) {
 			"enigmacli tx send %v %v %v --chain-id=%v -y",
 			key, encodedAddress, amountFaucet, chain)
 		fmt.Println(time.Now().UTC().Format(time.RFC3339), encodedAddress, "[1]")
+		fmt.Println("Executing cmd:", sendFaucet)
 		err := executeCmd(sendFaucet)
 
 		// If command fails, reutrn an error
