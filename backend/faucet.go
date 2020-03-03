@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -69,38 +68,39 @@ func main() {
 	}
 }
 
-func executeCmd(command string, writes ...string) {
-	cmd, wc, _ := goExecute(command)
+func executeCmd(command string) {
+	cmd, stdout, _ := goExecute(command)
 
-	for _, write := range writes {
-		wc.Write([]byte(write + "\n"))
+	var txOutput struct {
+		height int
+		txhash string
+		rawLog []string
 	}
-	cmd.Wait()
+
+	if err := json.NewDecoder(stdout).Decode(&txOutput); err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Sent tokens. txhash:", txOutput.txhash)
+
+	// TOOD: Print stderr
+
+	if err := cmd.Wait(); err != nil {
+		log.Fatal(err)
+	}
 }
 
-func goExecute(command string) (cmd *exec.Cmd, pipeIn io.WriteCloser, pipeOut io.ReadCloser) {
+func goExecute(command string) (cmd *exec.Cmd, pipeOut io.ReadCloser, pipeErr io.ReadCloser) {
 	cmd = getCmd(command)
-	pipeIn, _ = cmd.StdinPipe()
 	pipeOut, _ = cmd.StdoutPipe()
-	stderr, _ := cmd.StderrPipe()
+	pipeErr, _ = cmd.StderrPipe()
 
 	err := cmd.Start()
 	if err != nil {
 		log.Fatal(err)
 	}
-	// time.Sleep(time.Second)
 
-	slurp, _ := ioutil.ReadAll(stderr)
-	fmt.Printf("%s\n", slurp)
-
-	output, _ := ioutil.ReadAll(pipeOut)
-	fmt.Println(string(output))
-
-	if err := cmd.Wait(); err != nil {
-		log.Fatal(err)
-	}
-
-	return cmd, pipeIn, pipeOut
+	return cmd, pipeOut, pipeErr
 }
 
 func getCmd(command string) *exec.Cmd {
