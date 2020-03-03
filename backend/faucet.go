@@ -81,7 +81,10 @@ func goExecute(command string) (cmd *exec.Cmd, pipeIn io.WriteCloser, pipeOut io
 	cmd = getCmd(command)
 	pipeIn, _ = cmd.StdinPipe()
 	pipeOut, _ = cmd.StdoutPipe()
-	go cmd.Start()
+	err := cmd.Start()
+	if err != nil {
+		log.Fatal(err)
+	}
 	time.Sleep(time.Second)
 	return cmd, pipeIn, pipeOut
 }
