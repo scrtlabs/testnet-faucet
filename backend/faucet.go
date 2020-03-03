@@ -148,7 +148,7 @@ func getCoinsHandler(w http.ResponseWriter, request *http.Request) {
 			"enigmacli tx send %v %v %v --chain-id=%v -y",
 			key, encodedAddress, amountFaucet, chain)
 		fmt.Println(time.Now().UTC().Format(time.RFC3339), encodedAddress, "[1]")
-		executeCmd(sendFaucet, pass)
+		executeCmd(sendFaucet)
 
 		// time.Sleep(5 * time.Second)
 
