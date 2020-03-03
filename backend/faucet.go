@@ -20,9 +20,7 @@ import (
 var chain string
 var recaptchaSecretKey string
 var amountFaucet string
-var amountSteak string
 var key string
-var pass string
 var node string
 var publicURL string
 
@@ -50,9 +48,7 @@ func main() {
 	chain = getEnv("FAUCET_CHAIN")
 	recaptchaSecretKey = getEnv("FAUCET_RECAPTCHA_SECRET_KEY")
 	amountFaucet = getEnv("FAUCET_AMOUNT_FAUCET")
-	amountSteak = getEnv("FAUCET_AMOUNT_STEAK")
 	key = getEnv("FAUCET_KEY")
-	pass = getEnv("FAUCET_PASS")
 	node = getEnv("FAUCET_NODE")
 	publicURL = getEnv("FAUCET_PUBLIC_URL")
 
