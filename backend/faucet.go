@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -81,11 +82,24 @@ func goExecute(command string) (cmd *exec.Cmd, pipeIn io.WriteCloser, pipeOut io
 	cmd = getCmd(command)
 	pipeIn, _ = cmd.StdinPipe()
 	pipeOut, _ = cmd.StdoutPipe()
+	stderr, _ := cmd.StderrPipe()
+
 	err := cmd.Start()
 	if err != nil {
 		log.Fatal(err)
 	}
-	time.Sleep(time.Second)
+	// time.Sleep(time.Second)
+
+	slurp, _ := ioutil.ReadAll(stderr)
+	fmt.Printf("%s\n", slurp)
+
+	output, _ := ioutil.ReadAll(pipeOut)
+	fmt.Println(string(output))
+
+	if err := cmd.Wait(); err != nil {
+		log.Fatal(err)
+	}
+
 	return cmd, pipeIn, pipeOut
 }
 
