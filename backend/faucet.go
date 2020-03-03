@@ -68,26 +68,26 @@ func main() {
 	}
 }
 
-func executeCmd(command string) {
+func executeCmd(command string) (e error) {
 	cmd, stdout, _ := goExecute(command)
 
 	var txOutput struct {
-		height int
-		txhash string
-		rawLog []string
+		Height string
+		Txhash string
+		RawLog string
 	}
 
 	if err := json.NewDecoder(stdout).Decode(&txOutput); err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("server error. can't send tokens")
 	}
 
-	fmt.Println("Sent tokens. txhash:", txOutput.txhash)
-
-	// TOOD: Print stderr
+	fmt.Println("Sent tokens. txhash:", txOutput.Txhash)
 
 	if err := cmd.Wait(); err != nil {
 		log.Fatal(err)
 	}
+
+	return nil
 }
 
 func goExecute(command string) (cmd *exec.Cmd, pipeOut io.ReadCloser, pipeErr io.ReadCloser) {
@@ -165,15 +165,12 @@ func getCoinsHandler(w http.ResponseWriter, request *http.Request) {
 			"enigmacli tx send %v %v %v --chain-id=%v -y",
 			key, encodedAddress, amountFaucet, chain)
 		fmt.Println(time.Now().UTC().Format(time.RFC3339), encodedAddress, "[1]")
-		executeCmd(sendFaucet)
+		err := executeCmd(sendFaucet)
 
-		// time.Sleep(5 * time.Second)
-
-		// sendSteak := fmt.Sprintf(
-		// 	"enigmacli tx send %v %v %v --chain-id=%v",
-		// 	key, encodedAddress, chain, amountSteak)
-		// fmt.Println(time.Now().UTC().Format(time.RFC3339), encodedAddress, "[2]")
-		// executeCmd(sendSteak, pass)
+		// If command fails, reutrn an error
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+		}
 	}
 
 	return
