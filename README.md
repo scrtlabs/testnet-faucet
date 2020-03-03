@@ -1,6 +1,6 @@
 # Cosmos Testnet Faucet
 
-This faucet app allows anyone who passes a captcha to request tokens for a Cosmos account address. This app needs to be deployed on a Cosmos testnet full node, because it relies on using the `gaiacli` command to send tokens.
+This faucet app allows anyone who passes a captcha to request tokens for a Cosmos account address. This app needs to be deployed on a Cosmos testnet light client (or full node), because it relies on using the `enigmacli` command to send tokens.
 
 ## Prerequisites
 
@@ -10,11 +10,7 @@ If you don't have a reCAPTCHA site setup for the faucet, now is the time to get 
 
 ### Checkout Code
 
-The backend requires Go and the `dep` dependency tool to be installed. For the frontend, you also need to have node.js and the `yarn` dependency tool installed. 
-
-```
-go get git@github.com:cosmos/faucet
-```
+For the backend you need to have Go installed. For the frontend, you also need to have node.js and the `yarn` dependency tool installed.
 
 ## Backend Setup
 
@@ -23,20 +19,20 @@ go get git@github.com:cosmos/faucet
 First, set the environment variables for the backend, using `./backend/.env` as a template:
 
 ```
-cd $GOPATH/src/github.com/cosmos/faucet/backend
+cd backend
 cp .env .env.local
-vi .env.local
+vim .env.local
 ```
 
 Then build the backend.
 
 ```
-go mod init github.com/enigmampc/faucet/backend
+go mod init github.com/enigmampc/testnet-faucet/backend
 go mod tidy
 go build faucet.go
 ```
 
-The following executable will run the faucet on port 8080. 
+The following executable will run the faucet backend. 
 
 ```
 ./faucet
@@ -55,9 +51,9 @@ Run `go run faucet.go` in the `backend` directory to serve the backend.
 First, set the environment variables for the frontend, using `./frontend/.env` as a template:
 
 ```
-cd $GOPATH/src/github.com/cosmos/faucet/frontend
+cd frontend
 cp .env .env.local
-vi .env.local
+vim .env.local
 ```
 
 Then build the frontend.
@@ -73,10 +69,12 @@ Lastly, serve the `./frontend/dist` directory with the web server of your choice
 
 Run `yarn serve` in the `frontend` directory to serve the frontend with hot reload.
 
-## Service
+## In Production
+
+Place `faucet` executable, `dist` folder and `.env`,`.env.local` files in the same path and run
 
 ```bash
 vim .env
 cp .env .env.local
-sudo systemctl start faucet-ws.service
+./facuet
 ```
