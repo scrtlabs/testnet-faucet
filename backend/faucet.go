@@ -59,7 +59,7 @@ func main() {
 
 	http.HandleFunc("/claim", getCoinsHandler)
 
-	if err := http.ListenAndServe(publicURL, nil); err != nil {
+	if err := http.ListenAndServeTLS(publicURL, "server.crt", "server.key", nil); err != nil {
 		log.Fatal("failed to start server", err)
 	}
 }
