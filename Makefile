@@ -12,11 +12,11 @@ backend:
 frontend:
 	$(MAKE) -C frontend all
 
-run-local: frontend backend
-	cp frontend/.env backend/
-	cp frontend/.env.local backend/
-	# cd backend && ./faucet
-	cd frontend && yarn serve
+run-local: all
+	cd bin && ./faucet
+
+deploy: all
+	scp -r ./bin ubuntu@faucet:~/
 
 clean:
 	$(MAKE) -C backend clean
