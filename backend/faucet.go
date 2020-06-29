@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 
@@ -51,6 +52,7 @@ func main() {
 	key = getEnv("FAUCET_KEY")
 	node = getEnv("FAUCET_NODE")
 	publicURL = getEnv("FAUCET_PUBLIC_URL")
+	localStr := getEnv("LOCAL_RUN")
 
 	recaptcha.Init(recaptchaSecretKey)
 
@@ -59,9 +61,19 @@ func main() {
 
 	http.HandleFunc("/claim", getCoinsHandler)
 
-	if err := http.ListenAndServeTLS(publicURL, "server.crt", "server.key", nil); err != nil {
-		log.Fatal("failed to start server", err)
+	localBool, err := strconv.ParseBool(localStr)
+	if err != nil {
+		log.Fatal("Failed to parse dotenv var: LOCAL_RUN", err)
+	} else if !localBool {
+		if err := http.ListenAndServeTLS(publicURL, getEnv("FULLCHAIN_PEM_PATH"), getEnv("PRIVKEY_PEM_PATH"), nil); err != nil {
+			log.Fatal("failed to start server", err)
+		}
+	} else {
+		if err := http.ListenAndServe(publicURL, nil); err != nil {
+			log.Fatal("failed to start server", err)
+		}
 	}
+
 }
 
 func executeCmd(command string) (e error) {
@@ -158,7 +170,7 @@ func getCoinsHandler(w http.ResponseWriter, request *http.Request) {
 	// send the coins!
 	if captchaPassed {
 		sendFaucet := fmt.Sprintf(
-			"enigmacli tx send %v %v %v --chain-id=%v -y",
+			"secretcli tx send %v %v %v --chain-id=%v -y",
 			key, encodedAddress, amountFaucet, chain)
 		fmt.Println(time.Now().UTC().Format(time.RFC3339), encodedAddress, "[1]")
 		fmt.Println("Executing cmd:", sendFaucet)
