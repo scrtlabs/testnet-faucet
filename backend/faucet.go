@@ -32,7 +32,7 @@ type claimStruct struct {
 
 func getEnv(key string) string {
 	if value, ok := os.LookupEnv(key); ok {
-		fmt.Println(key, "=", value)
+		fmt.Println("Found", key)
 		return value
 	}
 
