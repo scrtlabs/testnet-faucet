@@ -1,6 +1,6 @@
 <template lang="pug">
 .section-header
-  h1 Enigma Blockchain
+  h1 Secret Network
   p Use this faucet to get tokens for the #[span.chain {{ config.chain }}] testnet. Please don't abuse this service&mdash;the number of available tokens is limited.
 </template>
 
@@ -15,24 +15,32 @@ export default {
 </script>
 
 <style lang="stylus">
-@import '~variables'
+@import '~variables';
 
-.section-header
-  padding 0 1rem 1.5rem
-  span.chain
-    white-space nowrap
+.section-header {
+  padding: 0 1rem 1.5rem;
 
-  strong
-    font-weight 500
+  span.chain {
+    white-space: nowrap;
+  }
 
-  h1
-    font-size 1.5rem
-    font-weight 600
-    color var(--bright)
-    line-height 1.25
+  strong {
+    font-weight: 500;
+  }
 
-  h1 + p
-    margin-top 0.75rem
-  p
-    color var(--dim)
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--bright);
+    line-height: 1.25;
+  }
+
+  h1 + p {
+    margin-top: 0.75rem;
+  }
+
+  p {
+    color: var(--dim);
+  }
+}
 </style>
