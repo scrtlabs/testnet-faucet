@@ -1,8 +1,9 @@
 node_modules
 .DS_Store
 backend/faucet
-backend/.env.local
 */__debug_bin
 .vscode
 /bin
 bin.*
+.env
+.env.local
