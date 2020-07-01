@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -85,7 +86,19 @@ func executeCmd(command string) (e error) {
 		RawLog string
 	}
 
-	if err := json.NewDecoder(stdout).Decode(&txOutput); err != nil {
+	output := ""
+	buf := bufio.NewReader(stdout)
+	for {
+		line, _, err := buf.ReadLine()
+		if err != nil {
+			break
+		}
+
+		output += string(line)
+	}
+
+	if err := json.Unmarshal([]byte(output), &txOutput); err != nil {
+		fmt.Println(err, output)
 		return fmt.Errorf("server error. can't send tokens")
 	}
 
@@ -170,14 +183,15 @@ func getCoinsHandler(w http.ResponseWriter, request *http.Request) {
 	// send the coins!
 	if captchaPassed {
 		sendFaucet := fmt.Sprintf(
-			"secretcli tx send %v %v %v --chain-id=%v -y",
-			key, encodedAddress, amountFaucet, chain)
+			"secretcli tx send %v %v %v --chain-id=%v --node=%v --keyring-backend=test -y",
+			key, encodedAddress, amountFaucet, chain, node)
 		fmt.Println(time.Now().UTC().Format(time.RFC3339), encodedAddress, "[1]")
 		fmt.Println("Executing cmd:", sendFaucet)
 		err := executeCmd(sendFaucet)
 
 		// If command fails, reutrn an error
 		if err != nil {
+			fmt.Println("Error executing command:", err)
 			http.Error(w, err.Error(), 500)
 		}
 	}
