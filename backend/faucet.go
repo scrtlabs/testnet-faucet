@@ -66,7 +66,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Failed to parse dotenv var: LOCAL_RUN", err)
 	} else if !localBool {
-		if err := http.ListenAndServeTLS(publicURL, getEnv("FULLCHAIN_PEM_PATH"), getEnv("PRIVKEY_PEM_PATH"), nil); err != nil {
+		if err := http.ListenAndServe(publicURL, nil); err != nil {
 			log.Fatal("failed to start server", err)
 		}
 	} else {
