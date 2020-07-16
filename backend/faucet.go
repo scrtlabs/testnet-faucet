@@ -98,7 +98,7 @@ func executeCmd(command string) (e error) {
 	}
 
 	if err := json.Unmarshal([]byte(output), &txOutput); err != nil {
-		fmt.Println(err, output)
+		fmt.Printf("Error: '%s' for parsing the following: '%s'\n", err, output)
 		return fmt.Errorf("server error. can't send tokens")
 	}
 
@@ -183,7 +183,7 @@ func getCoinsHandler(w http.ResponseWriter, request *http.Request) {
 	// send the coins!
 	if captchaPassed {
 		sendFaucet := fmt.Sprintf(
-			"secretcli tx send %v %v %v --chain-id=%v --node=%v --keyring-backend=test -y",
+			"secretcli tx send %v %v %v --chain-id=%v --node=%v --keyring-backend=test --output=json -y",
 			key, encodedAddress, amountFaucet, chain, node)
 		fmt.Println(time.Now().UTC().Format(time.RFC3339), encodedAddress, "[1]")
 		fmt.Println("Executing cmd:", sendFaucet)
