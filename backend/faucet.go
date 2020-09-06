@@ -25,7 +25,7 @@ var amountFaucet string
 var key string
 var node string
 var publicURL string
-var fees string
+var gasPrices string
 
 type claimStruct struct {
 	Address  string
@@ -55,7 +55,7 @@ func main() {
 	node = getEnv("FAUCET_NODE")
 	publicURL = getEnv("FAUCET_PUBLIC_URL")
 	localStr := getEnv("LOCAL_RUN")
-	fees = getEnv("FEES")
+	gasPrices = getEnv("GAS_PRICES")
 
 	recaptcha.Init(recaptchaSecretKey)
 
@@ -185,8 +185,8 @@ func getCoinsHandler(w http.ResponseWriter, request *http.Request) {
 	// send the coins!
 	if captchaPassed {
 		sendFaucet := fmt.Sprintf(
-			"secretcli tx send %v %v %v --fees=%v --chain-id=%v --node=%v --keyring-backend=test --output=json -y",
-			key, encodedAddress, amountFaucet, fees, chain, node)
+			"secretcli tx send %v %v %v --gas-prices=%v --chain-id=%v --node=%v --keyring-backend=test --output=json -y",
+			key, encodedAddress, amountFaucet, gasPrices, chain, node)
 		fmt.Println(time.Now().UTC().Format(time.RFC3339), encodedAddress, "[1]")
 		fmt.Println("Executing cmd:", sendFaucet)
 		err := executeCmd(sendFaucet)
