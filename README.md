@@ -46,7 +46,7 @@ This faucet app allows anyone who passes a captcha to request tokens for a Cosmo
 
 9. Install [secretcli](https://github.com/enigmampc/SecretNetwork/releases) on the server. `secretcli`'s version has to be compatible with the testnet.
 
-9. (optional) Configure [Caddy](https://caddyserver.com/docs/). You can use [this](https://github.com/enigmampc/testnet-faucet/caddy/Caddyfile) as a simple template.
+9. (optional) Configure [Caddy](https://caddyserver.com/docs/). You can use [this](https://github.com/enigmampc/testnet-faucet/blob/master/caddy/Caddyfile) as a simple template.
 
 10. You can start the server by running the `./path/to/bin/faucet` binary. It is recommended to create a systemd unit. For example (change parameters for your own deployment):
     ```
