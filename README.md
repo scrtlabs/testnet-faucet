@@ -42,7 +42,7 @@ This faucet app allows anyone who passes a captcha to request tokens for a Cosmo
     make all
     ```
 
-8. Deploy to server. You can do it manually by copying the `bin/` directory or run `make deploy` (make sure to change the makefile to match your server's address e.g. `scp -r ./bin user-name@your.domain:~/`)
+8. Deploy to server. You can do it manually by copying the `bin/` directory or run `make deploy` (make sure to change the makefile to match your server's address i.e. `scp -r ./bin user-name@your.domain:~/`)
 
 9. Install [secretcli](https://github.com/enigmampc/SecretNetwork/releases) on the server. `secretcli`'s version has to be compatible with the testnet.
 
