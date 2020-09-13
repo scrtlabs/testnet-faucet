@@ -1,80 +1,47 @@
 # Cosmos Testnet Faucet
 
-This faucet app allows anyone who passes a captcha to request tokens for a Cosmos account address. This app needs to be deployed on a Cosmos testnet light client (or full node), because it relies on using the `enigmacli` command to send tokens.
+This faucet app allows anyone who passes a captcha to request tokens for a Cosmos account address. This app needs to be deployed on a Secret Network testnet light client (or full node), because it relies on using the `secretcli` command to send tokens.
 
-## Prerequisites
+## How to deploy a faucet
 
-### reCAPTCHA
+1. Clone this repository locally
 
-If you don't have a reCAPTCHA site setup for the faucet, now is the time to get one. Go to the [Google reCAPTCHA Admin](https://www.google.com/recaptcha/admin) and create a new reCAPTCHA site. For the version of captcha, choose `reCAPTCHA v2`.
+2. Create Google reCAPTCHA v2 keys.
+    - [Go here](https://www.google.com/recaptcha/admin/create). *(If you want to use existing keys, [go here](https://www.google.com/recaptcha/admin))*
+    - Fill out the form. Make sure you select `reCAPTCHA v2 - "I'm not a robot" Checkbox`.
+    - *Note - you can start out with google's test API keys:*
+        - Site key: `6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI`
+        - Secret key: `6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe`
 
-### Checkout Code
+3. Create the the faucet account on the machine that is going to run the faucet.
+    ```
+    secretcli keys add <name of the account> --keyring-backend=test
+    ```
 
-For the backend you need to have Go installed. For the frontend, you also need to have node.js and the `yarn` dependency tool installed.
+4. Make sure the faucet account have funds. The faucet basically performs a `tx send` for every token request, so the faucet account should have enough tokens.
 
-## Backend Setup
+5. Copy the `.env` template to the `/frontend` directory
+    ```
+    cp .env.template ./frontend/.env
+    ```
 
-### Production
+6. Change the `.env` parameters as you see fit. Parameter description:
+    - `VUE_APP_CHAIN` - Should hold the `chain-id`
+    - `FAUCET_CHAIN` - Should hold the `chain-id`
+    - `VUE_APP_RECAPTCHA_SITE_KEY` - Google reCAPTCHA Site Key
+    - `FAUCET_RECAPTCHA_SECRET_KEY` - Google reCAPTCHA Secret Key
+    - `VUE_APP_CLAIM_URL` - URL for the claim server request. Leave as is.
+    - `FAUCET_PUBLIC_URL` - The URL that the server is going to listen to. Leave as is to use Caddy later.
+    - `FAUCET_AMOUNT_FAUCET` - Amount of tokens to send on each request. Should specify amount+denom e.g. 123uscrt.
+    - `FAUCET_KEY` - The account alias that will hold the faucet funds.
+    - `FAUCET_NODE` - Address of a full node/validator that the CLI will send txs to e.g. tcp://domain.name:26657
+    - `LOCAL_RUN` - Option for local run for debug. Not supported for now, should leave as `false`.
 
-First, set the environment variables for the backend, using `./backend/.env` as a template:
+7. Build:
+    ```
+    make all
+    ```
 
-```
-cd backend
-cp .env .env.local
-vim .env.local
-```
+8. Deploy to server. You can do it manually by copying the `bin/` directory or run `make deploy` (make sure to change the makefile to match your server's address e.g. `scp -r ./bin user-name@your.domain:~/`)
 
-Then build the backend.
-
-```
-go mod init github.com/enigmampc/testnet-faucet/backend
-go mod tidy
-go build faucet.go
-```
-
-The following executable will run the faucet backend. 
-
-```
-./faucet
-```
-
-**WARNING**: It's highly recommended to run a reverse proxy with rate limiting in front of this app. Included in this repo is an example `Caddyfile` that lets you run an TLS secured faucet that is rate limited to 1 claim per IP per day.
-
-### Development
-
-Run `go run faucet.go` in the `backend` directory to serve the backend.
-
-## Frontend Setup
-
-### Production
-
-First, set the environment variables for the frontend, using `./frontend/.env` as a template:
-
-```
-cd frontend
-cp .env .env.local
-vim .env.local
-```
-
-Then build the frontend.
-
-```
-yarn
-yarn build
-```
-
-Lastly, serve the `./frontend/dist` directory with the web server of your choice.
-
-### Development
-
-Run `yarn serve` in the `frontend` directory to serve the frontend with hot reload.
-
-## In Production
-
-Place `faucet` executable, `dist` folder and `.env`,`.env.local` files in the same path and run
-
-```bash
-vim .env
-cp .env .env.local
-./facuet
-```
+9. (optional) Configure [Caddy](https://caddyserver.com/docs/). You can use `./caddy/Caddyfile` as a simple template.
