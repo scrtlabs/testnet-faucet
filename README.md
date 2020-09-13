@@ -18,7 +18,7 @@ This faucet app allows anyone who passes a captcha to request tokens for a Cosmo
     secretcli keys add <name of the account> --keyring-backend=test
     ```
 
-4. Make sure the faucet account have funds. The faucet basically performs a `tx send` for every token request, so make sure the faucet account have enough tokens (more tokens could always be added by sending more funds to the faucet account).
+4. Make sure the faucet account have funds. The faucet basically performs a `tx send` for every token request, so make sure the faucet account have enough tokens (more tokens could be added later by sending more funds to the faucet account).
 
 5. Copy the `.env` template to the `/frontend` directory
     ```
