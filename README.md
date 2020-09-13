@@ -1,6 +1,6 @@
 # Secret Network Testnet Faucet
 
-This faucet app allows anyone who passes a captcha to request tokens for a Cosmos account address. This app needs to be deployed on a Secret Network testnet light client (or full node), because it relies on using the `secretcli` command to send tokens.
+This faucet app allows anyone who passes a captcha to request tokens for a Secret Network account address. This app needs to be deployed on a Secret Network testnet light client (or full node), because it relies on using the `secretcli` command to send tokens.
 
 ## How to deploy a faucet
 
