@@ -1,6 +1,6 @@
-# Secret Network Testnet Faucet
+# Cosmos Testnet Faucet
 
-This faucet app allows anyone who passes a captcha to request tokens for a Secret Network account address. This app needs to be deployed on a Secret Network testnet light client (or full node), because it relies on using the `secretcli` command to send tokens.
+This faucet app allows anyone who passes a captcha to request tokens for a Cosmos account address.
 
 ## How to deploy a faucet
 
@@ -43,5 +43,7 @@ This faucet app allows anyone who passes a captcha to request tokens for a Secre
     ```
 
 8. Deploy to server. You can do it manually by copying the `bin/` directory or run `make deploy` (make sure to change the makefile to match your server's address e.g. `scp -r ./bin user-name@your.domain:~/`)
+
+9. Install [secretcli](https://github.com/enigmampc/SecretNetwork/releases) on the server. `secretcli`'s version has to be compatible with the testnet.
 
 9. (optional) Configure [Caddy](https://caddyserver.com/docs/). You can use `./caddy/Caddyfile` as a simple template.
